@@ -9,4 +9,4 @@ JiraIssueTree.new(
   base_url: ENV['JIT_BASE_URL'],
   user: ENV['JIT_USER'],
   password: ENV['JIT_PASSWORD']
-).get(ARGV[0])
+).start!(ARGV[0])
