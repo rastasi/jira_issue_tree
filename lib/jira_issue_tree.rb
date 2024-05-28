@@ -10,8 +10,8 @@ class JiraIssueTree
     puts "<html>
             <head>
               <title>Jira issue Tree for #{key}</title>
+              <link rel='stylesheet' href='https://matcha.mizu.sh/matcha.css'>
               <style>
-                a { color: black; text-decoration: none; }
                 body { font-family: Courier New; }
               </style>
             </head>
@@ -70,10 +70,10 @@ class JiraIssueTree
   end
 
   def get_color(type)
-    return 'red' if type == 'Epic'
-    return 'green' if type == 'Story'
+    return 'magenta' if type == 'Epic'
+    return 'lightgreen' if type == 'Story'
 
-    'blue' if type == 'Task'
+    'lightblue' if type == 'Task'
   end
 
   def get_children(key)
