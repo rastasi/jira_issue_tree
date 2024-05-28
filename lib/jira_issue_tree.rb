@@ -7,9 +7,18 @@ class JiraIssueTree
   end
 
   def start!(key)
-    puts "<html><head><title>Jira issue Tree for #{key}</title></head><body>"
+    puts "<html>
+            <head>
+              <title>Jira issue Tree for #{key}</title>
+              <style>
+                a { color: black; text-decoration: none; }
+                body { font-family: Courier New; }
+              </style>
+            </head>
+            <body>"
     get(key)
-    puts '</body></html>'
+    puts '  </body>
+          </html>'
   end
 
   private
@@ -29,17 +38,17 @@ class JiraIssueTree
     type = issue['fields']['issuetype']['name']
     link = "#{@base_url}/browse/#{key}"
     color = get_color(type)
-    print_line("[<a href='#{link}' target='_blank'>#{key}</a>] [#{type}] <span style='color: #{color}'>#{summary}</span>")
+    print_line("<a href='#{link}' target='_blank'>#{"[#{key}]".ljust(8)}</a> #{"[#{type}]".ljust(7)} <span style='color: #{color}'>#{summary}</span>")
   end
 
   def print_linked(issue)
-    linked = issue['fields']['issuelinks']
+    linked = issue['fields']['issuelinks'].filter { |il| !il['inwardIssue'].nil? }
     return unless linked.any?
 
     print_line('<u><b>Linked issues</b></u>')
     puts '<ul>'
     linked.each do |il|
-      get(il['inwardIssue']['key']) if il['inwardIssue']
+      get(il['inwardIssue']['key'])
     end
     puts '</ul>'
   end
@@ -61,7 +70,7 @@ class JiraIssueTree
   end
 
   def get_color(type)
-    return 'purple' if type == 'Epic'
+    return 'red' if type == 'Epic'
     return 'green' if type == 'Story'
 
     'blue' if type == 'Task'
