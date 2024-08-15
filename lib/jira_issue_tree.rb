@@ -1,6 +1,7 @@
 class JiraIssueTree
   def initialize(options)
     @base_url = options[:base_url]
+    @allowed_issue_types = options[:allowed_issue_types]
     @conn = Faraday.new(url: @base_url) do |conn|
       conn.request :authorization, :basic, options[:user], options[:password]
     end
@@ -60,6 +61,8 @@ class JiraIssueTree
     print_line('<u><b>Children issues</b></u>')
     puts '<ul>'
     children['issues'].each do |child_issue|
+      next unless @allowed_issue_types.include?(child_issue['fields']['issuetype']['name'])
+
       print_issue(child_issue)
     end
     puts '</ul>'
